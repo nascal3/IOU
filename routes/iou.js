@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
+const sequelize = require('sequelize');
 
 const OwedBy = require('../models/owedByModel');
 const Owes = require('../models/owesModel');
@@ -104,11 +106,6 @@ router.delete('/delete', async (req, res) => {
     const userInfo = await helpers.mapUserIDs(user);
     if (!userInfo.id) return res.status(404).json({'error': 'The following user does not exist!'});
 
-    await User.destroy({
-        where: {
-            name: user
-        }
-    });
     await Owes.destroy({
         where: {
             user_id: userInfo.id
@@ -116,7 +113,18 @@ router.delete('/delete', async (req, res) => {
     });
     await OwedBy.destroy({
         where: {
-            user_id: userInfo.id
+            user_id: userInfo.id,
+            [Op.or]: [
+                { name: user }
+            ]
+        }
+    });
+    await User.destroy({
+        where: {
+            user_id: userInfo.id,
+            [Op.or]: [
+                { name: user }
+            ]
         }
     });
 
