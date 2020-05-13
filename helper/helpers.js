@@ -17,7 +17,21 @@ const mapUserIDs = async (userName) => {
         raw: true
     });
     return userID;
-}
+};
+
+// get all users names in the database
+const allUsers = async () => {
+    const names = [];
+    const users = await User.findAll({
+        attributes: ['name'],
+        raw: true
+    });
+
+    users.forEach(user => {
+        names.push(user.name)
+    });
+    return names;
+};
 
 // get all users owed money
 const getAllDebtors = async (id) => {
@@ -41,6 +55,18 @@ const getAllCreditors = async (id) => {
         raw: true
     });
     return creditors;
+};
+
+// check if user owes money to another user
+const checkCredit = async (borrowerID, creditorName) => {
+    const results  = await Owes.findOne({
+        where: {
+            user_id: borrowerID,
+            name: creditorName
+        },
+        raw: true
+    });
+    return results;
 };
 
 // format debtors/creditors records to wanted output format
@@ -127,8 +153,11 @@ const getUserInformation = async(users, type) => {
         status: 200,
         message: output
     };
-}
+};
 
 module.exports = {
-    getUserInformation : getUserInformation
+    getUserInformation : getUserInformation,
+    mapUserIDs: mapUserIDs,
+    allUsers: allUsers,
+    checkCredit: checkCredit
 };
