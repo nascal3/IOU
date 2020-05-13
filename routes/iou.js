@@ -114,20 +114,16 @@ router.delete('/delete', async (req, res) => {
     await OwedBy.destroy({
         where: {
             [Op.or]: [
-                {
-                    name: user, 
-                    user_id: userInfo.id
-                }
+                { name: user } , 
+                { user_id: userInfo.id }
             ]
         }
     });
     await User.destroy({
         where: {
             [Op.or]: [
-                {
-                    name: user, 
-                    user_id: userInfo.id
-                }
+                { name: user } , 
+                { user_id: userInfo.id }
             ]
         }
     });
