@@ -7,5 +7,5 @@ module.exports = (app) => {
     cors(),
     express.json()
   );
-  app.use('/api/iou', iou);
+  app.use('/api', iou);
 };
