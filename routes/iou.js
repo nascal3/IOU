@@ -115,9 +115,7 @@ router.delete('/delete', async (req, res) => {
         where: {
             [Op.or]: [
                 {
-                    name: user
-                },
-                {
+                    name: user, 
                     user_id: userInfo.id
                 }
             ]
@@ -127,9 +125,7 @@ router.delete('/delete', async (req, res) => {
         where: {
             [Op.or]: [
                 {
-                    name: user
-                },
-                {
+                    name: user, 
                     user_id: userInfo.id
                 }
             ]
