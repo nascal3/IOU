@@ -96,4 +96,35 @@ router.post('/iou', async (req, res) => {
     res.status(results.status).json({'users': results});
 });
 
+// REMOVE USER
+router.delete('/delete', async (req, res) => {
+    const user = req.body.user;
+    if (typeof user !== 'string' || !user) return res.status(422).json({'error': 'A user name input of type string required!'});
+
+    const userInfo = await helpers.mapUserIDs(user);
+    if (!userInfo.id) return res.status(404).json({'error': 'The following user does not exist!'});
+
+    await User.destroy({
+        where: {
+            name: user
+        }
+    });
+    await Owes.destroy({
+        where: {
+            user_id: userInfo.id
+        }
+    });
+    await OwedBy.destroy({
+        where: {
+            user_id: userInfo.id
+        }
+    });
+
+    const allUsers = await helpers.allUsers();
+    const type = 'all';
+    const results = await helpers.getUserInformation(allUsers, type);
+
+    res.status(200).json({'user': results});
+});
+
 module.exports = router;
