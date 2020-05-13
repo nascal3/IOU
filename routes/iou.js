@@ -64,8 +64,7 @@ router.post('/iou', async (req, res) => {
             }
         );
 
-        console.log(currentCredit, lenderInfo.id, borrower)
-        const down = await OwedBy.update(
+        await OwedBy.update(
             {
                 amount: currentCredit
             },
@@ -76,8 +75,6 @@ router.post('/iou', async (req, res) => {
                 }
             }
         );
-        console.log(down);
-
     } else {
         await Owes.create({
             user_id: borrowerInfo.id,
